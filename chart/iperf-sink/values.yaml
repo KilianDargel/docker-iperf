@@ -1,0 +1,48 @@
+# Default values for iperf-sink.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+VXLAN:
+  enabled: true
+  interface: vxeth0
+  ip: 192.168.1.3
+  selector: vxlan.openvnf.org
+  name: vxlan-controller-agent
+  image:
+    repository: openvnf/kube-vxlan-controller-agent
+    tag: 2.1.0
+    pullPolicy: IfNotPresent
+  resources:
+    cpu: 10m
+
+labels:
+  namespace: default
+
+k8s:
+  network: 10.10.0.0/16
+  via: 169.254.1.1
+  gw:  169.168.1.1
+
+replicaCount: 1
+
+image:
+  repository: kiliandargel/docker-iperf
+  tag: latest
+  pullPolicy: IfNotPresent
+
+iperf:
+  MODE: "-s"
+  PORT: "5201"
+  DAEMON: ""
+  OPTIONS: ""
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
