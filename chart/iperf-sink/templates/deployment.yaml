@@ -35,6 +35,13 @@ spec:
         securityContext:
           capabilities:
             add: ["NET_ADMIN"]
+        command:
+        - bash
+        - -c
+        - |
+          set -x
+          # set GRO settings off
+          ethtool -K {{ .Values.VXLAN.interface }} gro off
       - name: network-setup
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -57,6 +64,9 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            capabilities:
+              add: ["NET_ADMIN"]
           env:
           - name: MODE
             value: {{ quote .Values.iperf.MODE }}
